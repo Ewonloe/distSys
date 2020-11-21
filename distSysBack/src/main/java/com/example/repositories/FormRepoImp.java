@@ -53,8 +53,6 @@ public class FormRepoImp implements FormRepo{
     @Override
     public String createForm(Form form)
     {
-        System.out.println(form.getEmail());
-
         final String sql = "INSERT INTO form(run, first_name, last_name, last_name2, reason_id, email, emitted_at, expired_at) values (:formRun, :formFirstName, :formLastName, :formLastName2, :formReason_id, :formEmail, :formEmittedAt, :formExpiredAt)";
         final String anotherSql = "SELECT description FROM reason WHERE id = :id";
         final String auxSql = "SELECT duration FROM reason WHERE id = :id";
