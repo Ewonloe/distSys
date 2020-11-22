@@ -51,6 +51,14 @@ public class FormRepoImp implements FormRepo{
     }
 
     @Override
+    public Form getLatestForm()
+    {
+        final String sql = "SELECT * FROM form ORDER BY id DESC LIMIT 1";
+
+        return template.query(sql, new FormRowMapper()).get(0);
+    }
+
+    @Override
     public String createForm(Form form)
     {
         final String sql = "INSERT INTO form(run, first_name, last_name, last_name2, reason_id, email, emitted_at, expired_at) values (:formRun, :formFirstName, :formLastName, :formLastName2, :formReason_id, :formEmail, :formEmittedAt, :formExpiredAt)";

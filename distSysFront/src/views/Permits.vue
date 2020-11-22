@@ -83,13 +83,24 @@
 
             <b-row class="p-4">
                 <b-col>
-                    <b-button block variant="outline-info" @click="verifyData"  >Crear</b-button>
+                    <b-button block variant="outline-info" @click="verifyData">Crear</b-button>
                 </b-col>
                 <b-col>
                     <b-button block variant="outline-dark" v-on:click="redirigir()" >Cancelar</b-button>
                 </b-col>
             </b-row>
         </b-container>
+
+        <b-modal ref="my-modal" hide-footer title="Permiso creado">
+            <h3 align="center">id: {{data.id}}</h3>
+            <h3 align="center">Emitido el {{dateTransform(data.emitted_at)}} a las {{timeTransform(data.emitted_at)}}</h3>
+            <h3 align="center">Expira el {{dateTransform(data.expired_at)}} a las {{timeTransform(data.expired_at)}}</h3>
+
+        <div class="d-block text-center" >
+            
+        </div>
+        <b-button class="mt-3" variant="outline-danger" block @click="hideModal">Cerrar</b-button>
+        </b-modal>
     </div>
 </template>
 
@@ -97,6 +108,7 @@
 
 <script>
 import axios from 'axios';
+import moment from 'moment'
 export default {
     name: 'CreateEmergency',
     data() {
@@ -115,6 +127,8 @@ export default {
             user_id: '',
 
             mensaje: '',
+            data: [],
+
 
             reasons: [],
             
@@ -135,6 +149,7 @@ export default {
 
     methods: {
         showModal() {
+        this.mostrarDatos(),
         this.$refs['my-modal'].show()
         },
         async getReasons(){
@@ -144,6 +159,27 @@ export default {
         redirigir(){
              window.location.href = '/'
         },
+
+        mostrarDatos()
+        {
+            axios.get('http://localhost:8080/form/latest')
+            .then(response => {this.data=response.data})
+        },
+
+        dateTransform(postDate){
+                return moment(String(postDate)).format('MM/DD/YYYY');
+            },
+        timeTransform(postDate){
+                return moment(String(postDate)).format('HH:mm:ss');
+            },
+
+            
+
+        hideModal() {
+            this.$refs['my-modal'].hide()
+        },
+
+
         verifyData(){
             if(
                 this.run != '' &&
@@ -164,7 +200,7 @@ export default {
                     email: this.email,
                     reason_id: this.reason_id
 
-                }).then(this.mensaje="Creado correctamente!", this.Alert=true, this.estilo="success")
+                }).then(this.mensaje="Creado correctamente!", this.Alert=true, this.estilo="success", this.showModal())
                 .catch(error => {
                 console.log(error)
                 this.errored = true

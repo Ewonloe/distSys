@@ -27,6 +27,12 @@ public class FormService {
         return formRepo.getForm(id);
     }
 
+    @GetMapping("/latest")
+    public Form getLatestForm()
+    {
+        return formRepo.getLatestForm();
+    }
+
     @PostMapping("/add")
     @ResponseBody
     public String createForm(@RequestBody Form form)
